@@ -4,6 +4,7 @@ use ts_cursor::traverser::*;
 pub enum ResKind {
     Root,
     Function,
+    Class,
 }
 
 pub struct Resolved<'a> {
@@ -35,6 +36,29 @@ impl<'a> Resolved<'a> {
                 }
             }
             // return empty if not function
+            _ => vec![],
+        }
+    }
+
+    /// returns vec of resolved property names
+    /// empty if not class variant
+    pub fn properties(&self) -> Vec<Cursor<'a>> {
+        match &self.kind {
+            ResKind::Class => {
+                let mut cursor = self.cursor.clone();
+                if cursor.goto_field("body") {
+                    Traversal::from_cursor(&cursor, STKind::Abstract)
+                        .filter_map(|mot| match mot {
+                            Order::Enter(cur) => Some(cur),
+                            _ => None,
+                        })
+                        .filter(|cur| cur.kind() == "property_declaration")
+                        .collect()
+                } else {
+                    vec![]
+                }
+            }
+            // return empty if not class
             _ => vec![],
         }
     }
