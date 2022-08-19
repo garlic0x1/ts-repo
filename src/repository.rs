@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use super::resolved::*;
 use ts_cursor::{cursor::*, file::*, traverser::*};
 
+#[derive(Copy, Clone)]
 pub enum Language {
     PHP,
     JavaScript,
@@ -30,6 +31,23 @@ impl<'a> Repository<'a> {
             });
 
         s
+    }
+
+    pub fn files(&self) -> &Vec<File> {
+        &self.files
+    }
+
+    pub fn add_file(&mut self, file: &'a File) {
+        self.resolve(file.cursor(STKind::Abstract));
+        self.files.push(file.to_owned());
+    }
+
+    pub fn resolved(&self) -> &HashMap<String, Resolved<'a>> {
+        &self.resolved
+    }
+
+    pub fn language(&self) -> Language {
+        self.language
     }
 
     fn resolve(&mut self, cursor: Cursor<'a>) {
