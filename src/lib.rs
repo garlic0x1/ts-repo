@@ -17,9 +17,17 @@ mod tests {
         println!("{:?}", files.len());
 
         let repo = Repository::from_files(&files, Language::PHP);
+        let mut resolved_str = repo
+            .resolved()
+            .iter()
+            .map(|r| r.0.to_owned())
+            .collect::<Vec<String>>();
+        resolved_str.sort();
 
         assert_eq!(files.len(), 3);
         assert_eq!(repo.resolved().len(), 8);
+        assert_eq!(format!("{:?}", resolved_str), 
+        "[\"ROOT\", \"qiwibutton_add_admin_page\", \"qiwibutton_change_shop\", \"qiwibutton_frame_script\", \"qiwibutton_option_page\", \"qiwibutton_reg_css\", \"qiwibutton_reg_js\", \"qiwibutton_shortcode\"]");
     }
 
     #[test]
