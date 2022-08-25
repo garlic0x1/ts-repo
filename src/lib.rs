@@ -1,11 +1,26 @@
+pub mod crawler;
 pub mod repository;
 pub mod resolved;
 
 #[cfg(test)]
 mod tests {
+    use super::repository::*;
+    use crate::crawler::crawl_svn_php;
     use ts_cursor::file::File;
 
-    use super::repository::*;
+    #[tokio::test]
+    async fn downloader() {
+        let files = crawl_svn_php("http://plugins.svn.wordpress.org/qiwi-button/trunk/")
+            .await
+            .unwrap();
+
+        println!("{:?}", files.len());
+
+        let repo = Repository::from_files(&files, Language::PHP);
+
+        assert_eq!(files.len(), 3);
+        assert_eq!(repo.resolved().len(), 8);
+    }
 
     #[test]
     fn multifile() {
