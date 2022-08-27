@@ -2,6 +2,9 @@ pub mod crawler;
 pub mod repository;
 pub mod resolved;
 
+pub use repository::*;
+pub use resolved::*;
+
 #[cfg(test)]
 mod tests {
     use super::repository::*;
@@ -25,9 +28,9 @@ mod tests {
         resolved_str.sort();
 
         assert_eq!(files.len(), 3);
-        assert_eq!(repo.resolved().len(), 8);
         assert_eq!(format!("{:?}", resolved_str), 
-        "[\"ROOT\", \"qiwibutton_add_admin_page\", \"qiwibutton_change_shop\", \"qiwibutton_frame_script\", \"qiwibutton_option_page\", \"qiwibutton_reg_css\", \"qiwibutton_reg_js\", \"qiwibutton_shortcode\"]");
+            "[\"http://plugins.svn.wordpress.org/qiwi-button/trunk/qiwibutton.php_ROOT\", \"http://plugins.svn.wordpress.org/qiwi-button/trunk/qiwiframe.php_ROOT\", \"http://plugins.svn.wordpress.org/qiwi-button/trunk/uninstall.php_ROOT\", \"qiwibutton_add_admin_page\", \"qiwibutton_change_shop\", \"qiwibutton_frame_script\", \"qiwibutton_option_page\", \"qiwibutton_reg_css\", \"qiwibutton_reg_js\", \"qiwibutton_shortcode\"]");
+        assert_eq!(repo.resolved().len(), 10);
     }
 
     #[test]
@@ -45,7 +48,7 @@ mod tests {
         resolved_str.sort();
         assert_eq!(
             format!("{:?}", resolved_str),
-            "[\"ROOT\", \"test\", \"test1\", \"test2\"]"
+            "[\"./test_php/test_graph.php_ROOT\", \"./test_php/test_multifile.php_ROOT\", \"test\", \"test1\", \"test2\"]"
         );
     }
 

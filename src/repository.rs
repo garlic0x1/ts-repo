@@ -59,8 +59,9 @@ impl<'a> Repository<'a> {
                     }
                 }
                 "program" => {
-                    let res = Resolved::new(cur, ResKind::Root);
-                    self.resolved.insert("ROOT".to_owned(), res);
+                    let res = Resolved::new(cur.clone(), ResKind::Root);
+                    self.resolved
+                        .insert(format!("{}_ROOT", cur.filename()), res);
                 }
                 _ => (),
             });
